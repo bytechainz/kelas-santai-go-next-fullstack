@@ -1,0 +1,123 @@
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+
+https://download.docker.com/linux/ubuntu \
+
+$(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+
+sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+
+----------------------------------------------------------------------------------------------------------------------------
+
+
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+
+https://download.docker.com/linux/ubuntu \
+
+$(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+
+
+
+
+
+
+cd ~
+cd /
+
+
+- install di docker
+docker pull mysql
+docker pull phpmyadmin/phpmyadmin
+
+docker images
+
+- menjalankan
+
+
+
+docker run -d --name mysql-container -e MYSQL_ROOT_PASSWORD=rootpassword -e MYSQL_DATABASE=contohdb -e MYSQL_USER=tama002 -e MYSQL_PASSWORD=123456 -p 3306:3306 mysql:latest
+
+docker ps
+
+
+masuk ke dalam container myslq : docker exec -it mysql-container sh
+
+
+
+mysql -u root -p
+
+show databases;
+quit
+
+ctrl + ad
+
+
+menjalankan phpmyadmin : docker run -d --name phpmyadmin-container --link mysql-container:mysql -e PMA_HOST=mysql -e PMA_PORT=3306 -e PMA_ARBITRARY=1 -p 8080:80 phpmyadmin/phpmyadmin
+
+docker run -d --name phpmyadmin-container --link mysql-container:mysql -e PMA_HOST=mysql -e PMA_PORT=3306 -e PMA_ARBITRARY=1 -p 8080:80 phpmyadmin/phpmyadmin
+
+
+membuat docker images :
+- 
+
+
+--------
+
+
+go version
+go mod init meeting1
+
+package main
+func main() {
+
+}
+
+package main import ( "fmt" "net/http" ) func handler(w http.ResponseWriter, r *http.Request) { fmt.Fprintf(w, "Halo, ini backend Golang!") } func main() { http.HandleFunc("/", handler) fmt.Println("Server berjalan di http://localhost:8080") http.ListenAndServe(":4000", nil) }
+
+go run main.go
+
+localhost:4000
+
+buat new file : Dockerfile
+
+#isi dari Dockerfile
+
+#liat versi golang yang ada di go.mod
+
+FROM golang:1.24.5-alpine
+
+WORKDIR /app
+
+# Copy semua source code ke dalam container
+
+COPY . .
+
+# Download dependensi
+
+RUN go mod download
+
+# Expose port (jika kamu dengarkan di 0.0.0.0:3000)
+
+EXPOSE 4000
+
+# Jalankan langsung dengan go run
+
+CMD ["go", "run", "main.go"]
+
+
+
+dibuild : docker build -t backend-1:latest .
+
+
+docker images
+
+docker run -d -p 4000:4000 backend-1:latest
+
+docker ps
+docker stop <nama_container>
+docker rm <nama_container>
+
+
+
+
